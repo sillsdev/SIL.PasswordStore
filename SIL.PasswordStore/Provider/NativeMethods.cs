@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 
 internal static class NativeMethods
 {
-	private const string LibSecret = "libsecret-1.so";
+	private const string LibSecret = "libsecret-1.so.0";
 
 	internal struct GError
 	{
