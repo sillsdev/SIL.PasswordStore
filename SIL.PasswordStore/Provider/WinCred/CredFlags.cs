@@ -3,13 +3,12 @@
 
 using System;
 
-namespace SIL.Secrets.Provider.WinCred
+namespace SIL.Secrets.Provider.WinCred;
+
+// https://docs.microsoft.com/en-us/windows/win32/api/wincred/ns-wincred-credentiala
+[Flags]
+internal enum CredFlags
 {
-	// https://docs.microsoft.com/en-us/windows/win32/api/wincred/ns-wincred-credentiala
-	[Flags]
-	internal enum CredFlags
-	{
-		PromptNow = 0x02,
-		UsernameTarget = 0x04,
-	}
+	PromptNow = 0x02,
+	UsernameTarget = 0x04,
 }
