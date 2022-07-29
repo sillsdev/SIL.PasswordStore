@@ -55,10 +55,9 @@ internal class WindowsProvider: IPasswordStoreImpl
 		{
 			using var credentialHandle = new CredentialHandle(credPtr);
 			var credential = credentialHandle.GetCredential();
-			if (credential == null || credential?.CredentialBlobSize == 0)
-				return null;
-
-			return Marshal.PtrToStringUni(credential?.CredentialBlob ?? IntPtr.Zero);
+			return credential?.CredentialBlobSize == 0
+				? null
+				: Marshal.PtrToStringUni(credential?.CredentialBlob ?? IntPtr.Zero);
 		}
 		var error = Marshal.GetLastWin32Error();
 		return error switch {
