@@ -1,6 +1,8 @@
 // Copyright (c) 2022 SIL International
 // This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 
+// ReSharper disable InconsistentNaming
+#pragma warning disable CS0649
 namespace SIL.Secrets.Provider;
 
 using System;
