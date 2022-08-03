@@ -5,32 +5,35 @@ using System;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 
-namespace SIL.Secrets.Provider.WinCred;
-
-internal sealed class CredentialHandle : CriticalHandleZeroOrMinusOneIsInvalid
+namespace SIL.Secrets.Provider.WinCred
 {
-	// Set the handle.
-	internal CredentialHandle(IntPtr preexistingHandle)
-	{
-		SetHandle(preexistingHandle);
-	}
 
-	internal Credential? GetCredential()
+	internal sealed class CredentialHandle : CriticalHandleZeroOrMinusOneIsInvalid
 	{
-		if (!IsInvalid)
+		// Set the handle.
+		internal CredentialHandle(IntPtr preexistingHandle)
 		{
-			return (Credential?)Marshal.PtrToStructure(handle, typeof(Credential));
+			SetHandle(preexistingHandle);
 		}
-		throw new InvalidOperationException("Invalid CriticalHandle!");
-	}
 
-	protected override bool ReleaseHandle()
-	{
-		if (IsInvalid)
-			return false;
+		internal Credential? GetCredential()
+		{
+			if (!IsInvalid)
+			{
+				return (Credential?)Marshal.PtrToStructure(handle, typeof(Credential));
+			}
 
-		Native.CredFree(handle);
-		SetHandleAsInvalid();
-		return true;
+			throw new InvalidOperationException("Invalid CriticalHandle!");
+		}
+
+		protected override bool ReleaseHandle()
+		{
+			if (IsInvalid)
+				return false;
+
+			Native.CredFree(handle);
+			SetHandleAsInvalid();
+			return true;
+		}
 	}
 }
