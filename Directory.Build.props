@@ -1,0 +1,24 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>default</LangVersion>
+    <Nullable>enable</Nullable>
+    <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
+    <Company>SIL International</Company>
+    <Authors>SIL International</Authors>
+    <Product>SIL.PasswordStore</Product>
+    <Copyright>Copyright © 2022 SIL International</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/sillsdev/SIL.PasswordStore</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)/SIL.PasswordStore.snk</AssemblyOriginatorKeyFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <AppendToReleaseNotesProperty><![CDATA[
+See full changelog at https://github.com/sillsdev/SIL.PasswordStore/blob/master/CHANGELOG.md]]>
+    </AppendToReleaseNotesProperty>
+    <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
+  </PropertyGroup>
+</Project>
