@@ -40,13 +40,13 @@ namespace SIL.Secrets.Provider.WinCred
 		/// <summary>
 		/// A string comment from the user that describes this credential.
 		/// </summary>
-		[MarshalAs(UnmanagedType.LPWStr)] public string Comment;
+		[MarshalAs(UnmanagedType.LPWStr)] public string? Comment;
 
 		/// <summary>
 		/// The time, in Coordinated Universal Time (Greenwich Mean Time), of the last modification
 		/// of the credential. For write operations, the value of this member is ignored.
 		/// </summary>
-		public IntPtr LastWritten;
+		public System.Runtime.InteropServices.ComTypes.FILETIME LastWritten;
 
 		/// <summary>
 		/// The size, in bytes, of the CredentialBlob member.

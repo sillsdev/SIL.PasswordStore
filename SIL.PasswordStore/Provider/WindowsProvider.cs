@@ -30,7 +30,7 @@ namespace SIL.Secrets.Provider
 				Flags = 0,
 				Type = CredType.Generic,
 				TargetName = GetTargetName(service, user),
-				Comment = string.Empty,
+				Comment = null,
 				CredentialBlobSize = passwordLength * 2,
 				CredentialBlob = Marshal.StringToCoTaskMemUni(password),
 				Persist = CredPersist.LocalMachine,
@@ -43,7 +43,7 @@ namespace SIL.Secrets.Provider
 			if (result)
 				return;
 
-			throw new PasswordStoreException(error, "CredWrite failed");
+			throw new PasswordStoreException(error, $"CredWrite failed with 0x{Marshal.GetHRForLastWin32Error():x}");
 		}
 
 		public string? GetPassword(string service, string user)
@@ -64,7 +64,7 @@ namespace SIL.Secrets.Provider
 			var error = Marshal.GetLastWin32Error();
 			return error switch {
 				ErrorNotFound => null,
-				_ => throw new PasswordStoreException(error, "CredRead failed")
+				_ => throw new PasswordStoreException(error, "CredRead failed with 0x{Marshal.GetHRForLastWin32Error():x}")
 			};
 		}
 
@@ -79,7 +79,7 @@ namespace SIL.Secrets.Provider
 			var error = Marshal.GetLastWin32Error();
 			return error switch {
 				ErrorNotFound => false,
-				_ => throw new PasswordStoreException(error, "Can't delete password")
+				_ => throw new PasswordStoreException(error, "Can't delete password. Error 0x{Marshal.GetHRForLastWin32Error():x}")
 			};
 		}
 	}

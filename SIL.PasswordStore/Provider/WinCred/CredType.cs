@@ -5,7 +5,7 @@ namespace SIL.Secrets.Provider.WinCred
 {
 
 // https://docs.microsoft.com/en-us/windows/win32/api/wincred/ns-wincred-credentiala
-	internal enum CredType
+	internal enum CredType: uint
 	{
 		/// <summary>
 		/// The credential is a generic credential. The credential will not be used by any particular

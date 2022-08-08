@@ -4,7 +4,7 @@
 namespace SIL.Secrets.Provider.WinCred
 {
 
-	internal enum CredPreserve
+	internal enum CredPreserve: uint
 	{
 		/// <summary>
 		/// The credential BLOB from an existing credential is preserved with the same credential

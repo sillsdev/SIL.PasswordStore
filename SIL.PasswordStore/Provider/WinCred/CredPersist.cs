@@ -5,7 +5,7 @@ namespace SIL.Secrets.Provider.WinCred
 {
 
 // https://docs.microsoft.com/en-us/windows/win32/api/wincred/ns-wincred-credentiala
-	internal enum CredPersist
+	internal enum CredPersist: uint
 	{
 		/// <summary>
 		/// The credential persists for the life of the logon session. It will not be visible to
