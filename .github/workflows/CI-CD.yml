@@ -69,8 +69,8 @@ jobs:
       with:
         name: SIL.PasswordStore.NuGetPackage
         path: |
-          **/*.nupkg
-          **/*.snupkg
+          SIL.PasswordStore/bin/Release/*.nupkg
+          SIL.PasswordStore/bin/Release/*.snupkg
       if: matrix.os == 'ubuntu-latest'
 
   publish-nuget:
