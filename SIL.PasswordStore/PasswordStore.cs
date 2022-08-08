@@ -3,6 +3,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using JetBrains.Annotations;
 using SIL.Secrets.Provider;
 
 namespace SIL.Secrets
@@ -75,17 +76,20 @@ namespace SIL.Secrets
 #endif
 		}
 
-		public static void SetPassword(string service, string user, string password)
+		[PublicAPI]
+		public static void SetPassword([NotNull] string service, [CanBeNull] string user, [CanBeNull] string password)
 		{
 			_provider.SetPassword(service, user, password);
 		}
 
-		public static string? GetPassword(string service, string user)
+		[PublicAPI]
+		public static string? GetPassword([NotNull] string service, [CanBeNull] string user)
 		{
 			return _provider.GetPassword(service, user);
 		}
 
-		public static bool DeletePassword(string service, string user)
+		[PublicAPI]
+		public static bool DeletePassword([NotNull] string service, [CanBeNull] string user)
 		{
 			return _provider.DeletePassword(service, user);
 		}
