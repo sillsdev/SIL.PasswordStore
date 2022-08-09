@@ -85,4 +85,4 @@ jobs:
         path: artifacts
 
     - name: Publish to Nuget
-      run: dotnet nuget push artifacts/SIL.PasswordStore.NuGetPackage/*.*nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.SILLSDEV_PUBLISH_NUGET_ORG}} --skip-duplicate
+      run: dotnet nuget push artifacts/SIL.PasswordStore.NuGetPackage/*.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.SILLSDEV_PUBLISH_NUGET_ORG}} --skip-duplicate
