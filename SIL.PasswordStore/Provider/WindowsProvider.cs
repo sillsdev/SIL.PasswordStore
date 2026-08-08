@@ -25,13 +25,13 @@ namespace SIL.Secrets.Provider
 
 			var passwordLength = string.IsNullOrEmpty(password)
 				? 0
-				: (uint)Encoding.UTF8.GetBytes(password).Length + 1;
+				: (uint)Encoding.Unicode.GetByteCount(password);
 			var credential = new Credential {
 				Flags = 0,
 				Type = CredType.Generic,
 				TargetName = GetTargetName(service, user),
 				Comment = null,
-				CredentialBlobSize = passwordLength * 2,
+				CredentialBlobSize = passwordLength,
 				CredentialBlob = Marshal.StringToCoTaskMemUni(password),
 				Persist = CredPersist.LocalMachine,
 				AttributeCount = 0
