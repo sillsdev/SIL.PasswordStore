@@ -58,7 +58,7 @@ namespace SIL.Secrets.Provider
 				var credential = credentialHandle.GetCredential();
 				return credential?.CredentialBlobSize == 0
 					? null
-					: Marshal.PtrToStringUni(credential?.CredentialBlob ?? IntPtr.Zero);
+					: Marshal.PtrToStringUni(credential?.CredentialBlob ?? IntPtr.Zero, (int)(credential?.CredentialBlobSize ?? 0) / 2).TrimEnd('\0');
 			}
 
 			var error = Marshal.GetLastWin32Error();
