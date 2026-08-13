@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Removed
+
+- removed net461 and net6.0 build targets
+
 ### Added
 
 - Initial release
+- build for .NET 10.0 and net462
