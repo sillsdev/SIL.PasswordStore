@@ -2,6 +2,7 @@
 // This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 
 using System;
+using System.Runtime.InteropServices;
 using NUnit.Framework;
 
 namespace SIL.Secrets.Tests
@@ -13,11 +14,14 @@ namespace SIL.Secrets.Tests
 		private const string TestService  = "test-service";
 		private const string TestUser     = "test-user";
 		private const string TestPassword = "test-password";
+		private const string NonLatinTestServiceOrUser = "ខ្មែរ";
 
 		[TearDown]
 		public void TearDown()
 		{
 			PasswordStore.DeletePassword(TestService, TestUser);
+			PasswordStore.DeletePassword(NonLatinTestServiceOrUser, TestUser);
+			PasswordStore.DeletePassword(TestService, NonLatinTestServiceOrUser);
 		}
 
 		[Test]
@@ -105,6 +109,66 @@ like osx";
 			PasswordStore.SetPassword(TestService, TestUser, TestPassword);
 			Assert.That(() => PasswordStore.GetPassword(null, TestUser),
 				Throws.ArgumentNullException);
+		}
+
+		[Test]
+		public void GetPassword_NonLatinService()
+		{
+			PasswordStore.SetPassword(NonLatinTestServiceOrUser, TestUser, TestPassword);
+
+			string password = null;
+			Assert.That(() => password = PasswordStore.GetPassword(NonLatinTestServiceOrUser, TestUser), Throws.Nothing);
+			Assert.That(password, Is.EqualTo(TestPassword));
+		}
+
+		[Test]
+		public void GetPassword_NonLatinUser()
+		{
+			PasswordStore.SetPassword(TestService, NonLatinTestServiceOrUser, TestPassword);
+
+			string password = null;
+			Assert.That(() => password = PasswordStore.GetPassword(TestService, NonLatinTestServiceOrUser), Throws.Nothing);
+			Assert.That(password, Is.EqualTo(TestPassword));
+		}
+
+		[Test]
+		public void GetPassword_NonLatinPassword()
+		{
+			var expectedPassword = "Öខ្មែរ😀";
+			PasswordStore.SetPassword(TestService, TestUser, expectedPassword);
+
+			string password = null;
+			Assert.That(() => password = PasswordStore.GetPassword(TestService, TestUser),
+				Throws.Nothing);
+			Assert.That(password, Is.EqualTo(expectedPassword));
+		}
+
+		[Test]
+		public void GetPassword_EmptyPassword()
+		{
+			var expectedPassword = "";
+			PasswordStore.SetPassword(TestService, TestUser, expectedPassword);
+
+			string password = null;
+			Assert.That(() => password = PasswordStore.GetPassword(TestService, TestUser),
+				Throws.Nothing);
+			Assert.That(password, Is.EqualTo(expectedPassword));
+		}
+
+		[Test]
+		public void GetPassword_CorrectlyReadPasswordFromOldVersion()
+		{
+			// Older versions of the library on Windows stored a wrong blob size which means we read
+			// more than the password. This test checks that even with a wrong blob size we still
+			// get the password the user entered. We simulate that scenario with a password that
+			// contains a null character.
+			var expectedPassword = "abc";
+			PasswordStore.SetPassword(TestService, TestUser, expectedPassword + "\0def");
+
+			string password = null;
+			Assert.That(() => password = PasswordStore.GetPassword(TestService, TestUser),
+				Throws.Nothing);
+			Assert.That(password, Is.EqualTo(expectedPassword));
 		}
 
 		[Test]
