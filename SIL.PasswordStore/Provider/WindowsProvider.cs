@@ -23,15 +23,15 @@ namespace SIL.Secrets.Provider
 			if (string.IsNullOrEmpty(service))
 				throw new ArgumentNullException(nameof(service));
 
-			var passwordLength = string.IsNullOrEmpty(password)
+			var passwordByteLength = string.IsNullOrEmpty(password)
 				? 0
-				: (uint)Encoding.UTF8.GetBytes(password).Length + 1;
+				: Encoding.Unicode.GetByteCount(password);
 			var credential = new Credential {
 				Flags = 0,
 				Type = CredType.Generic,
 				TargetName = GetTargetName(service, user),
 				Comment = null,
-				CredentialBlobSize = passwordLength * 2,
+				CredentialBlobSize = (uint)passwordByteLength,
 				CredentialBlob = Marshal.StringToCoTaskMemUni(password),
 				Persist = CredPersist.LocalMachine,
 				AttributeCount = 0
@@ -56,15 +56,24 @@ namespace SIL.Secrets.Provider
 			{
 				using var credentialHandle = new CredentialHandle(credPtr);
 				var credential = credentialHandle.GetCredential();
-				return credential?.CredentialBlobSize == 0
-					? null
-					: Marshal.PtrToStringUni(credential?.CredentialBlob ?? IntPtr.Zero);
+				if (!credential.HasValue)
+					return null;
+				if (credential.Value.CredentialBlobSize == 0)
+					return string.Empty;
+
+				var charCount = checked((int)(credential.Value.CredentialBlobSize / sizeof(char)));
+				var value = Marshal.PtrToStringUni(credential.Value.CredentialBlob, charCount);
+				// Older versions of the Windows provider stored a wrong blob size, so it's
+				// possible that we read more than the original password. Therefore we look for a
+				// null character and return everything before it.
+				var nulIndex = value?.IndexOf('\0') ?? -1;
+				return nulIndex >= 0 ? value!.Substring(0, nulIndex) : value;
 			}
 
 			var error = Marshal.GetLastWin32Error();
 			return error switch {
 				ErrorNotFound => null,
-				_ => throw new PasswordStoreException(error, "CredRead failed with 0x{Marshal.GetHRForLastWin32Error():x}")
+				_ => throw new PasswordStoreException(error, $"CredRead failed with 0x{Marshal.GetHRForLastWin32Error():x}")
 			};
 		}
 
@@ -79,7 +88,7 @@ namespace SIL.Secrets.Provider
 			var error = Marshal.GetLastWin32Error();
 			return error switch {
 				ErrorNotFound => false,
-				_ => throw new PasswordStoreException(error, "Can't delete password. Error 0x{Marshal.GetHRForLastWin32Error():x}")
+				_ => throw new PasswordStoreException(error, $"Can't delete password. Error 0x{Marshal.GetHRForLastWin32Error():x}")
 			};
 		}
 	}
