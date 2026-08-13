@@ -2,11 +2,12 @@
   <PropertyGroup>
     <LangVersion>default</LangVersion>
     <Nullable>enable</Nullable>
-    <TargetFrameworks>net461;netstandard2.0;net6.0</TargetFrameworks>
-    <Company>SIL International</Company>
-    <Authors>SIL International</Authors>
+    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard2.0;net10.0</TargetFrameworks>
+    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">net462;netstandard2.0;net10.0</TargetFrameworks>
+    <Company>SIL Global</Company>
+    <Authors>SIL Global</Authors>
     <Product>SIL.PasswordStore</Product>
-    <Copyright>Copyright © 2022 SIL International</Copyright>
+    <Copyright>Copyright © 2022-2026 SIL Global</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/sillsdev/SIL.PasswordStore</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
@@ -21,4 +22,9 @@ See full changelog at https://github.com/sillsdev/SIL.PasswordStore/blob/master/
     </AppendToReleaseNotesProperty>
     <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
   </PropertyGroup>
+
+  <Target Name="EnsureNetFxTarget" BeforeTargets="Pack"
+          Condition="'$(IsPackable)' == 'true' and !$(TargetFrameworks.Contains('net462'))">
+    <Error Text="net462 must be built when packing; run pack on Windows." />
+  </Target>
 </Project>
