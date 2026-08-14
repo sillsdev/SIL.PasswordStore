@@ -12,7 +12,9 @@ namespace SIL.Secrets
 	{
 		private static readonly IPasswordStoreImpl _provider;
 
-#if NET461
+		// RuntimeInformation isn't available on .NET Framework prior to 4.7.1, so we have to
+		// determine the platform the hard way.
+#if NETFRAMEWORK
 		private static string _unixName = string.Empty;
 		private static string UnixName
 		{
@@ -49,7 +51,7 @@ namespace SIL.Secrets
 
 		static PasswordStore()
 		{
-#if NET461
+#if NETFRAMEWORK
 			if (Environment.OSVersion.Platform == PlatformID.Unix)
 			{
 				if (UnixName == "Linux")
