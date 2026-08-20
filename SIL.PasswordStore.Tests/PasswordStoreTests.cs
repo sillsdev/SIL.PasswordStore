@@ -2,7 +2,6 @@
 // This software is licensed under the MIT License (http://opensource.org/licenses/MIT)
 
 using System;
-using System.Runtime.InteropServices;
 using NUnit.Framework;
 
 namespace SIL.Secrets.Tests
@@ -156,6 +155,7 @@ like osx";
 		}
 
 		[Test]
+		[Platform("Win")]
 		public void GetPassword_CorrectlyReadPasswordFromOldVersion()
 		{
 			// Older versions of the library on Windows stored a wrong blob size which means we read
